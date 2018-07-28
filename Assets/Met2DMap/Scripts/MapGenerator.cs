@@ -135,10 +135,9 @@ namespace Met2DMap {
                 RoomMatrix[j] = new int[NCol];
                 for ( int i = 0; i < NCol; i++ ) {
                     RoomMatrix[j][i] = -1;
-                    foreach ( int roomIndex in Rooms.Keys ) {
-                        IRoom room = Rooms[roomIndex];
+                    foreach ( Room room in Rooms.Values.OrderByDescending(r => r.Priority) ) {
                         if ( room.IsIn(WorldCellPoints[j][i]) ) {
-                            RoomMatrix[j][i] = roomIndex;
+                            RoomMatrix[j][i] = room.RoomIndex;
                             break;
                         }
                     }

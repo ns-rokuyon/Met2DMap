@@ -9,8 +9,15 @@ namespace Met2DMap {
         [SerializeField]
         private int index;
 
+        [SerializeField]
+        private int priority = 0;
+
         public int RoomIndex {
             get { return index; }
+        }
+
+        public int Priority {
+            get { return priority; }
         }
 
         private MeshCollider meshCollider;
@@ -69,6 +76,9 @@ namespace Met2DMap {
     public interface IRoom {
         // Room index number
         int RoomIndex { get; }
+
+        // Priority order
+        int Priority { get; }
 
         // Center position in the world
         Vector2 Center { get; }
