@@ -27,23 +27,12 @@ namespace Met2DMap {
             }
         }
 
-        private Bounds boundingBox;
-        public Bounds BoundingBox {
-            get {
-                if ( boundingBox != null )
-                    return boundingBox;
-                MeshFilter mf = GetComponent<MeshFilter>();
-                boundingBox = mf.sharedMesh.bounds;
-                return boundingBox;
-            }
-        }
-
         public Vector2 Center {
-            get { return transform.position + BoundingBox.center; }
+            get { return transform.position; }
         }
 
         public Vector2 Size {
-            get { return Vector3.Scale(transform.localScale, BoundingBox.size); }
+            get { return transform.localScale; }
         }
 
         public bool IsIn(Vector2 pos) {
@@ -51,25 +40,7 @@ namespace Met2DMap {
         }
 
         public bool IsIn(Vector3 pos) {
-            if ( MeshCollider ) {
-                Debug.Log("IsIn: " + pos);
-                return MeshCollider.bounds.Contains(pos);
-            }
-
-            float harfX = BoundingBox.extents.x;
-            float harfY = BoundingBox.extents.y;
-            float harfZ = BoundingBox.extents.z;
-            Vector3 areaCenter = transform.position;
-            if ( areaCenter.x - harfX > pos.x || areaCenter.x + harfX < pos.x ) {
-                return false;
-            }
-            if ( areaCenter.y - harfY > pos.y || areaCenter.y + harfY < pos.y ) {
-                return false;
-            }
-            if ( areaCenter.z - harfZ > pos.z || areaCenter.z + harfZ < pos.z ) {
-                return false;
-            }
-            return true;
+            return MeshCollider.bounds.Contains(pos);
         }
     }
 
@@ -89,9 +60,4 @@ namespace Met2DMap {
         // Return whether the given point is in room or not
         bool IsIn(Vector2 pos);
     }
-
-    public interface IRoom3D : IRoom {
-        Bounds BoundingBox { get; }
-    }
-
 }
