@@ -6,6 +6,12 @@ using UniRx.Triggers;
 
 
 namespace Met2DMap {
+    public enum ItemState {
+        NO,
+        ACQUIRED,
+        UNACQUIRED
+    }
+
     [ExecuteInEditMode]
     public class MapChip : MonoBehaviour {
         // Edge width
@@ -20,6 +26,13 @@ namespace Met2DMap {
         [SerializeField]
         protected Image InsideImage;
 
+        // Prefab of item image
+        [SerializeField]
+        protected GameObject ItemImagePrefab;
+
+        [SerializeField]
+        protected ItemState ItemState;
+
         // Shape type of this chip
         [SerializeField]
         public ShapeType Shape;
@@ -30,6 +43,8 @@ namespace Met2DMap {
                 return rectTransform ? rectTransform : rectTransform = GetComponent<RectTransform>();
             }
         }
+
+        private GameObject itemIcon;
 
         public Vector2 GridCellSize
         {
@@ -46,6 +61,22 @@ namespace Met2DMap {
         private void Start() {
             this.ObserveEveryValueChanged(_ => Shape)
                 .Subscribe(s => OnChangeShape(s))
+                .AddTo(this);
+
+            this.ObserveEveryValueChanged(_ => ItemState)
+                .Subscribe(state => {
+                    if ( itemIcon ) {
+                        Destroy(itemIcon);
+                    }
+
+                    if ( state == ItemState.ACQUIRED ) {
+                        itemIcon = Instantiate(ItemImagePrefab);
+                        itemIcon.transform.SetParent(transform, false);
+                    }
+                    else if ( state == ItemState.UNACQUIRED ) {
+                        // TODO
+                    }
+                })
                 .AddTo(this);
         }
 

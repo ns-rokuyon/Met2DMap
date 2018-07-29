@@ -60,6 +60,9 @@ MonoBehaviour:
   EdgeWidth: 2
   EdgeImage: {fileID: 114388885719204476}
   InsideImage: {fileID: 114350133833570048}
+  ItemImagePrefab: {fileID: 1120228956674408, guid: 7335890a4bfdd2446935aacecf3afe68,
+    type: 2}
+  ItemState: 0
   Shape: 0
 --- !u!114 &114350133833570048
 MonoBehaviour:
