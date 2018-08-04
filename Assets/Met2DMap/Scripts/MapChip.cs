@@ -26,9 +26,13 @@ namespace Met2DMap {
         [SerializeField]
         protected Image InsideImage;
 
-        // Prefab of item image
+        // Reference to the inner gameobject for acquired item
         [SerializeField]
-        protected GameObject ItemImagePrefab;
+        protected GameObject AcquiredItemImage;
+
+        // Reference to the inner gameobject for unacquired item
+        [SerializeField]
+        protected GameObject UnacquiredItemImage;
 
         [SerializeField]
         protected ItemState ItemState;
@@ -43,8 +47,6 @@ namespace Met2DMap {
                 return rectTransform ? rectTransform : rectTransform = GetComponent<RectTransform>();
             }
         }
-
-        private GameObject itemIcon;
 
         public Vector2 GridCellSize
         {
@@ -65,16 +67,28 @@ namespace Met2DMap {
 
             this.ObserveEveryValueChanged(_ => ItemState)
                 .Subscribe(state => {
-                    if ( itemIcon ) {
-                        Destroy(itemIcon);
-                    }
-
-                    if ( state == ItemState.ACQUIRED ) {
-                        itemIcon = Instantiate(ItemImagePrefab);
-                        itemIcon.transform.SetParent(transform, false);
-                    }
-                    else if ( state == ItemState.UNACQUIRED ) {
-                        // TODO
+                    switch ( state ) {
+                        case ItemState.ACQUIRED: {
+                                if ( AcquiredItemImage )
+                                    AcquiredItemImage.SetActive(true);
+                                if ( UnacquiredItemImage )
+                                    UnacquiredItemImage.SetActive(false);
+                                break;
+                            }
+                        case ItemState.UNACQUIRED: {
+                                if ( AcquiredItemImage )
+                                    AcquiredItemImage.SetActive(false);
+                                if ( UnacquiredItemImage )
+                                    UnacquiredItemImage.SetActive(true);
+                                break;
+                            }
+                        case ItemState.NO: {
+                                if ( AcquiredItemImage )
+                                    AcquiredItemImage.SetActive(false);
+                                if ( UnacquiredItemImage )
+                                    UnacquiredItemImage.SetActive(false);
+                                break;
+                            }
                     }
                 })
                 .AddTo(this);
